@@ -1,0 +1,28 @@
+name: release
+
+# Publishes to npm when a GitHub release is published, using npm trusted publishing (OIDC) — no npm token
+# is stored in GitHub. One-time setup is described in docs/releasing.md.
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/cinder-shell
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+      - run: sudo apt-get install -y tmux
+      - run: npm ci
+      - run: npm test
+      - run: npm run docs:check
+      - run: npm publish --provenance --access public

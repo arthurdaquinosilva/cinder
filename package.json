@@ -1,0 +1,46 @@
+{
+  "name": "cinder-shell",
+  "version": "0.1.0",
+  "description": "A modern, beautiful interactive JavaScript and TypeScript shell for Node — magics, history, completion and live signatures in a calm terminal UI.",
+  "type": "module",
+  "bin": {
+    "cinder": "bin/cinder.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "docs": "node scripts/gen-magic-docs.js",
+    "docs:check": "node scripts/gen-magic-docs.js --check"
+  },
+  "keywords": [
+    "repl",
+    "shell",
+    "node",
+    "javascript",
+    "typescript",
+    "interactive",
+    "terminal",
+    "tui"
+  ],
+  "author": "Arthur D'Aquino <arthurdaquinosilva@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arthurdaquinosilva/cinder.git"
+  },
+  "homepage": "https://github.com/arthurdaquinosilva/cinder",
+  "bugs": "https://github.com/arthurdaquinosilva/cinder/issues",
+  "dependencies": {
+    "acorn": "^8.18.0",
+    "acorn-walk": "^8.3.5"
+  }
+}
