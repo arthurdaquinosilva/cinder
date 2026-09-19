@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/arthurdaquinosilva/cinder/main/docs/assets/cover.svg?sanitize=true" alt="cinder's start screen: the pixel CINDER: wordmark, version and environment info, the input bar and the key bar" width="900">
+<img src="https://raw.githubusercontent.com/arthurdaquinosilva/cinder/main/docs/assets/cover.svg?sanitize=true" alt="cinder's start screen: the pixel CINDER.JS wordmark, version and environment info, the input bar and the key bar" width="900">
 
 # ✦ cinder
 

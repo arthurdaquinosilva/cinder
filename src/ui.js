@@ -83,8 +83,9 @@ export class Repl {
     if (this.box) return this.boxBanner();
     const t = this.theme;
     const out = [''];
-    if (this.cols >= 44) out.push(...wordmark(t, 'CINDER:'));
-    else out.push('  ' + t.paint('accent.bold', 'CINDER:'));
+    const mark = wordmark(t, 'CINDER.JS');
+    if (Math.max(...mark.map(textWidth)) < this.cols) out.push(...mark);
+    else out.push('  ' + t.paint('accent.bold', 'CINDER.JS'));
     out.push('', '  ' + t.paint('faint', `v${VERSION}`), '');
     const rows = [['Node', process.version]];
     const pkg = packageName(process.cwd());

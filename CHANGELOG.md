@@ -2,7 +2,7 @@
 
 ## 0.1.0
 
-- First version, modelled on ember — an interactive JavaScript and TypeScript shell: pixel `CINDER:` banner, full-width input bar with syntax highlighting, context-aware key bar and mode line, cells with a rail and timing footers, three themes (void, nebula, matrix).
+- First version, modelled on ember — an interactive JavaScript and TypeScript shell: pixel `CINDER.JS` banner, full-width input bar with syntax highlighting, context-aware key bar and mode line, cells with a rail and timing footers, three themes (void, nebula, matrix).
 - **Running code**: cells run in Node's main context; `let`/`const`/`class` persist and can be declared again; top-level `await` and `import`; `{a: 1}` is an object; `_`, `_N`, `Out`, `In`, `_error`; built-in modules as lazy globals; `require` from the current directory.
 - **Help while typing**: completions from live objects (members, literals, keys, modules, paths, magics), signature hints with JSDoc, default and argument types, grey history suggestions.
 - **Input**: smart Enter, Shift+Enter via modifyOtherKeys/CSI-u, auto-indent and dedent, bracket matching, bracketed paste with Node REPL prompts stripped, Ctrl+R search, Ctrl+O editor, emacs keys, undo, Ctrl+Z.

@@ -31,8 +31,13 @@
 <rect x="287.8" y="63" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="296.2" y="63" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="304.6" y="72.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
-<rect x="329.9" y="72.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
-<rect x="338.3" y="72.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="372.1" y="63" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="380.5" y="63" width="8.7" height="19" fill="rgb(255,138,76)"/>
+<rect x="397.3" y="72.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="405.8" y="63" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="414.2" y="63" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="422.6" y="63" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="431.1" y="63" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="34.9" y="82" width="8.7" height="19" fill="rgb(255,138,76)"/>
 <rect x="93.9" y="82" width="8.7" height="19" fill="rgb(255,138,76)"/>
 <rect x="119.2" y="82" width="8.7" height="19" fill="rgb(255,138,76)"/>
@@ -49,8 +54,11 @@
 <rect x="287.8" y="91.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="296.2" y="91.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="304.6" y="82" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
-<rect x="329.9" y="82" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
-<rect x="338.3" y="82" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="380.5" y="82" width="8.7" height="19" fill="rgb(255,138,76)"/>
+<rect x="397.3" y="82" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="405.8" y="91.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="414.2" y="91.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="422.6" y="91.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="34.9" y="101" width="8.7" height="19" fill="rgb(255,138,76)"/>
 <rect x="93.9" y="101" width="8.7" height="19" fill="rgb(255,138,76)"/>
 <rect x="119.2" y="101" width="8.7" height="19" fill="rgb(255,138,76)"/>
@@ -62,8 +70,11 @@
 <rect x="270.9" y="101" width="8.7" height="19" fill="rgb(255,138,76)"/>
 <rect x="287.8" y="101" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="296.2" y="110.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="321.5" y="110.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="329.9" y="110.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
-<rect x="338.3" y="110.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="346.8" y="110.5" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="380.5" y="101" width="8.7" height="19" fill="rgb(255,138,76)"/>
+<rect x="431.1" y="101" width="8.7" height="19" fill="rgb(255,138,76)"/>
 <rect x="43.3" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="51.7" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="60.1" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
@@ -84,8 +95,15 @@
 <rect x="254.0" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="270.9" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="304.6" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="321.5" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <rect x="329.9" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
-<rect x="338.3" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="355.2" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="363.6" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="372.1" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="397.3" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="405.8" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="414.2" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
+<rect x="422.6" y="120" width="8.7" height="9.5" fill="rgb(255,138,76)"/>
 <text y="172"><tspan x="34.9" style="fill:rgb(85,85,85)">v0.1.0</tspan></text>
 <text y="210"><tspan x="34.9" style="fill:rgb(231,231,231)">Node       </tspan><tspan x="127.6" style="fill:rgb(134,199,192)" class="b">v24.20.0</tspan></text>
 <text y="229"><tspan x="34.9" style="fill:rgb(231,231,231)">Package    </tspan><tspan x="127.6" style="fill:rgb(134,199,192)" class="b">my-app@1.0.0</tspan></text>
