@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `install.sh`: install from GitHub with `curl -fsSL https://raw.githubusercontent.com/arthurdaquinosilva/cinder/main/install.sh | sh`, without going through npm. It installs into `~/.local/lib/cinder` and `~/.local/bin`, works with any Node on PATH, and supports `CINDER_VERSION` and `--uninstall`.
+
 ## 0.1.0
 
 - First version, modelled on ember — an interactive JavaScript and TypeScript shell: pixel `CINDER.JS` banner, full-width input bar with syntax highlighting, context-aware key bar and mode line, cells with a rail and timing footers, three themes (void, nebula, matrix).

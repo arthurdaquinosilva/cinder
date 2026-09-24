@@ -35,8 +35,16 @@ cinder is the JavaScript sibling of [ember](https://github.com/arthurdaquinosilv
 ## Install
 
 ```sh
-npm install -g cinder-shell    # the `cinder` command everywhere
-npx cinder-shell               # or try it without installing
+curl -fsSL https://raw.githubusercontent.com/arthurdaquinosilva/cinder/main/install.sh | sh
+```
+
+That downloads cinder from GitHub into `~/.local/lib/cinder` and links the `cinder` command in `~/.local/bin`. It runs on whichever `node` is on your PATH, so switching Node versions with nvm keeps it available. To update, run the installer again. Other options:
+
+```sh
+curl -fsSL .../install.sh | CINDER_VERSION=v0.1.0 sh      # a specific tag or branch
+curl -fsSL .../install.sh | sh -s -- --uninstall          # remove it (history and config are kept)
+npm install -g cinder-shell                               # or from npm
+npx cinder-shell                                          # or try it without installing
 ```
 
 The package is `cinder-shell` on npm; the command is `cinder`. Requires Node 20.12 or newer on macOS or Linux; TypeScript needs Node 22.13+ (22.15+ to import `.ts` files), or the `typescript` package in your project.
