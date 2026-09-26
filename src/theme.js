@@ -2,6 +2,9 @@
 
 import util from 'node:util';
 
+// The name's color, the same in every theme: purple sets cinder apart from ember, whose accent is orange.
+const BRAND = '#b18cff';
+
 export const PALETTES = {
   // Near-black monochrome with a single warm accent.
   void: {
@@ -9,21 +12,21 @@ export const PALETTES = {
     selection: '#2b2b2b', bar: '#24262b', label: '#86c7c0', accent: '#ff8a4c', accent2: '#ffc46b',
     ok: '#7ee2a8', err: '#ff6b6b', warn: '#f2c14e', info: '#7cc4ff',
     keyword: '#ff9e6b', builtin: '#7cc4ff', function: '#e7e7e7', klass: '#ffd08a', string: '#a8d8a0',
-    number: '#f5a97f', comment: '#5f5f5f', operator: '#9a9a9a', decorator: '#c9a0ff',
+    number: '#f5a97f', comment: '#5f5f5f', operator: '#9a9a9a', decorator: '#c9a0ff', brand: BRAND,
   },
   nebula: {
     fg: '#e4e1f5', muted: '#8c87a8', faint: '#56516e', border: '#3a3552', surface: '#15131f',
     selection: '#2a2640', bar: '#262238', label: '#6ee7f9', accent: '#b18cff', accent2: '#6ee7f9',
     ok: '#6ee7b7', err: '#fb7185', warn: '#fcd34d', info: '#6ee7f9',
     keyword: '#c4a5ff', builtin: '#6ee7f9', function: '#f0ecff', klass: '#f9a8d4', string: '#86efac',
-    number: '#fda4af', comment: '#5c5776', operator: '#a39fc0', decorator: '#f9a8d4',
+    number: '#fda4af', comment: '#5c5776', operator: '#a39fc0', decorator: '#f9a8d4', brand: BRAND,
   },
   matrix: {
     fg: '#d7f5dd', muted: '#7a9a80', faint: '#46604b', border: '#2e4533', surface: '#0f1a12',
     selection: '#1f3324', bar: '#18261c', label: '#5eead4', accent: '#4ade80', accent2: '#a3e635',
     ok: '#4ade80', err: '#f87171', warn: '#facc15', info: '#5eead4',
     keyword: '#4ade80', builtin: '#5eead4', function: '#ecfdf0', klass: '#a3e635', string: '#bef264',
-    number: '#fde68a', comment: '#4b6b52', operator: '#8fb396', decorator: '#5eead4',
+    number: '#fde68a', comment: '#4b6b52', operator: '#8fb396', decorator: '#5eead4', brand: BRAND,
   },
 };
 
@@ -32,7 +35,7 @@ export const DEFAULT_THEME = 'void';
 // Style names → "modifiers palette-key". `bg:key` sets the background.
 const STYLES = {
   fg: 'fg', muted: 'muted', faint: 'faint', border: 'border', label: 'bold label',
-  accent: 'accent', 'accent.bold': 'bold accent', accent2: 'accent2',
+  accent: 'accent', 'accent.bold': 'bold accent', accent2: 'accent2', brand: 'brand', 'brand.bold': 'bold brand',
   ok: 'ok', 'ok.bold': 'bold ok', err: 'err', 'err.bold': 'bold err', warn: 'warn', info: 'info',
   'fg.bold': 'bold fg', 'info.bold': 'bold info',
   // syntax

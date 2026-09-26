@@ -40,5 +40,5 @@ export function pixelRows(word, spacing = 1) {
 }
 
 export function wordmark(theme, word = 'CINDER.JS', indent = 2) {
-  return pixelRows(word).map((row) => ' '.repeat(indent) + theme.paint('accent.bold', row));
+  return pixelRows(word).map((row) => ' '.repeat(indent) + theme.paint('brand.bold', row));
 }

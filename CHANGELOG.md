@@ -3,6 +3,7 @@
 ## Unreleased
 
 - `install.sh`: install from GitHub with `curl -fsSL https://raw.githubusercontent.com/arthurdaquinosilva/cinder/main/install.sh | sh`, without going through npm. It installs into `~/.local/lib/cinder` and `~/.local/bin`, works with any Node on PATH, and supports `CINDER_VERSION` and `--uninstall`.
+- The `CINDER.JS` wordmark (and `cinder` in the box layout) is now purple in every theme, so it no longer matches ember's orange.
 
 ## 0.1.0
 

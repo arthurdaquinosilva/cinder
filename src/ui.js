@@ -85,7 +85,7 @@ export class Repl {
     const out = [''];
     const mark = wordmark(t, 'CINDER.JS');
     if (Math.max(...mark.map(textWidth)) < this.cols) out.push(...mark);
-    else out.push('  ' + t.paint('accent.bold', 'CINDER.JS'));
+    else out.push('  ' + t.paint('brand.bold', 'CINDER.JS'));
     out.push('', '  ' + t.paint('faint', `v${VERSION}`), '');
     const rows = [['Node', process.version]];
     const pkg = packageName(process.cwd());
@@ -102,7 +102,7 @@ export class Repl {
   /** The box layout's compact banner: `✦ cinder v0.2.0`, environment and a few hints. */
   boxBanner() {
     const t = this.theme;
-    const name = [...'cinder'].map((c, i) => t.paint(i < 2 ? 'accent.bold' : 'accent2', c)).join('');
+    const name = [...'cinder'].map((c, i) => t.paint(i < 2 ? 'brand.bold' : 'brand', c)).join('');
     const sep = t.paint('faint', '  ·  ');
     const pkg = packageName(process.cwd());
     const env = [t.paint('faint', 'node ') + t.paint('muted', process.version)];
