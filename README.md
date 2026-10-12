@@ -30,7 +30,7 @@ cinder is the JavaScript sibling of [ember](https://github.com/arthurdaquinosilv
 - **A REPL that forgives.** `const` and `class` can be declared again, `await` and `import` work at the top level, `{a: 1}` is an object, and code pasted from a Node session loses its `>` prompts.
 - **Everything you reach for.** 78 magics: `%timeit`, `%time`, `%profile`, `%run file.js` (TypeScript too), `obj?`, `!shell`, `%cd`, `%history` across sessions, `%store`, `%macro`, `%%capture`, `%autoreload`, `%debugger` for Chrome DevTools… and `cd ..` or `pwd` work without the `%`.
 - **Errors you can read.** The failing line from your cell with a caret under the problem, your frames only, causes included.
-- **Feels good.** A spinner that keeps turning during blocking code, Ctrl+C that interrupts loops and awaits, Shift+Enter for new lines, vi or emacs keys, three themes, two layouts.
+- **Feels good.** A spinner that keeps turning during blocking code, Ctrl+C that interrupts loops and awaits, Shift+Enter for new lines, vi or emacs keys, three themes, three layouts.
 
 ## Install
 

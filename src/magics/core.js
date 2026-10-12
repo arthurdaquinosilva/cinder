@@ -159,7 +159,7 @@ lineMagic(['editmode', 'vi'], {
   shell.print(`editing mode: ${shell.settings.editingMode}`);
 });
 
-lineMagic(['layout'], { doc: 'Switch the prompt layout: block (full-width input bar) or box (rounded box, like ember\'s classic look).', usage: '[block|box]' }, (shell, args) => {
+lineMagic(['layout'], { doc: 'Switch the prompt layout: rule (input between two rules, querky-style), block (full-width input bar) or box (rounded box, like ember\'s classic look).', usage: '[rule|block|box]' }, (shell, args) => {
   if (args.trim()) {
     try {
       shell.setSetting('layout', args.trim());

@@ -86,11 +86,11 @@ describe('the input bar', () => {
     assert.equal(repl.buffer.text, 'const a = 1\na + 1');
   });
 
-  test('Ctrl+C clears the input, then hints how to exit; Ctrl+D exits on empty input', () => {
+  test('Ctrl+C clears the input, then asks for a second press to exit; Ctrl+D exits on empty input', () => {
     keys('abc\x03');
     assert.equal(repl.buffer.text, '');
     keys('\x03');
-    assert.match(screen().at(-1), /press ctrl\+d to exit/);
+    assert.match(screen().at(-1), /Press Ctrl-C again to exit/);
     keys('\x04');
     assert.equal(submitted, null);
   });
@@ -149,4 +149,45 @@ describe('the box layout', () => {
       shell.settings.layout = 'block';
     }
   });
+});
+
+describe('the rule layout', () => {
+  const withRule = (fn) => {
+    shell.settings.layout = 'rule';
+    try {
+      fn();
+    } finally {
+      shell.settings.layout = 'block';
+    }
+  };
+
+  test('draws the input between two rules with a footer under them', () => withRule(() => {
+    prompt('let x = 1');
+    const lines = screen();
+    assert.match(lines[0], /^─+$/);
+    assert.match(lines[1], /^> let x = 1$/);
+    assert.match(lines[2], /^─+$/);
+    assert.match(lines[3], /^ {2}\? for shortcuts +In \[1\] {2}· {2}node v\d+/);
+  }));
+
+  test('? on an empty prompt toggles the shortcuts, any other key closes them', () => withRule(() => {
+    prompt('');
+    keys('?');
+    assert.ok(screen().some((l) => l.includes('%help all commands')));
+    assert.equal(repl.buffer.text, '');
+    keys('a');
+    assert.ok(!screen().some((l) => l.includes('%help all commands')));
+    assert.equal(repl.buffer.text, 'a');
+  }));
+
+  test('Ctrl+C clears the input, then needs a second press to exit', () => withRule(() => {
+    prompt('let x = 1');
+    keys('\x03');
+    assert.equal(repl.buffer.text, '');
+    assert.equal(submitted, undefined);
+    keys('\x03');
+    assert.ok(screen().some((l) => l.includes('Press Ctrl-C again to exit')));
+    keys('\x03');
+    assert.equal(submitted, null);
+  }));
 });

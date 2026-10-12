@@ -30,10 +30,13 @@ export class FakeStdout {
   off() {}
 }
 
-/** A shell with in-memory history; with `profile`, one using the XDG directories (for %store and friends). */
+/**
+ * A shell with in-memory history; with `profile`, one using the XDG directories (for %store and friends).
+ * Behaviour tests read output in the block layout's rail format; the rule layout has its own tests.
+ */
 export function makeShell(settings = {}, { profile = false } = {}) {
   const stdout = new FakeStdout();
-  const shell = new Shell({ settings: new Settings(settings), history: new HistoryManager(null), stdout, profile: profile ? new Profile() : null });
+  const shell = new Shell({ settings: new Settings({ layout: 'block', ...settings }), history: new HistoryManager(null), stdout, profile: profile ? new Profile() : null });
   return { shell, stdout };
 }
 

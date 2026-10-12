@@ -19,7 +19,7 @@ Every setting is optional. This example shows each one with its default (`//` co
 ```jsonc
 {
   "theme": "void",            // void · nebula · matrix
-  "layout": "block",          // block (full-width input bar) · box (rounded box)
+  "layout": "rule",           // rule (input between two rules) · block (full-width input bar) · box (rounded box)
   "typescript": "auto",       // auto (when a cell isn't JavaScript) · always · off
   "editingMode": "emacs",     // emacs · vi
   "automagic": true,          // run magics without the % prefix (cd .., pwd, ls)
@@ -85,7 +85,7 @@ Errors in startup code are reported and skipped. `--no-startup` skips startup fi
 | `-i`, `--interactive` | Stay interactive after `-e`, `-p` or a file |
 | `--profile NAME` | Use a named profile |
 | `--theme NAME` | Color theme for this session |
-| `--layout NAME` | `block` or `box` |
+| `--layout NAME` | `rule` (default), `block` or `box` |
 | `--vi` | vi key bindings |
 | `--no-startup` | Skip startup files and `execLines` |
 | `--no-history` | Don't read or write the history file |

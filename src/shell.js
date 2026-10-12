@@ -13,7 +13,7 @@ import { CELL_MAGICS, LINE_MAGICS, MagicError, lookupMagic } from './magics/inde
 import { Macro } from './magics/history.js';
 import { DEFAULT_ALIASES } from './magics/osm.js';
 import { AutoReloader } from './autoreload.js';
-import { Rail, Spinner } from './output.js';
+import { REST, Rail, STAR_FRAMES, Spinner } from './output.js';
 import { Settings } from './config.js';
 import { charWidth, formatDuration, stripAnsi, width as textWidth } from './text.js';
 import { Theme } from './theme.js';
@@ -83,6 +83,7 @@ export class Shell {
     this.cleared = new Set(); // undeletable globals set to undefined by %del/%reset
     this.history = history ?? new HistoryManager(profile ? profile.historyFile : null);
     this.rail = null;
+    this.lastRail = null;
     this.interruptWait = null;
     this.onBackgroundOutput = null; // set by the UI while the prompt is showing
     this.spinner = new Spinner(1, this.spinnerLook());
@@ -205,6 +206,7 @@ export class Shell {
       this.spinner.setLook(this.spinnerLook());
     }
     this.settings[name] = value;
+    if (name === 'layout') this.spinner.setLook(this.spinnerLook());
     return value;
   }
 
@@ -230,6 +232,17 @@ export class Shell {
     const t = this.theme;
     const open = (style) => (t.color ? `\x1b[${t.codes[style]}m` : '');
     const reset = t.color ? '\x1b[0m' : '';
+    if (this.settings.layout === 'rule') {
+      return {
+        before: '',
+        frameOpen: open('accent'),
+        after: reset + t.paint('accent', ' Running…') + t.paint('faint', ' ('),
+        timeOpen: open('faint'),
+        hint: reset + t.paint('faint', ' · ctrl+c to interrupt)'),
+        reset,
+        frames: STAR_FRAMES,
+      };
+    }
     return {
       before: t.paint('border', '╰─ '),
       frameOpen: open('accent'),
@@ -245,12 +258,15 @@ export class Shell {
     const plainOut = process.stdout.write;
     const plainErr = process.stderr.write;
     const realWrite = this.stdout === process.stdout ? (text) => plainOut.call(process.stdout, text) : (text) => this.stdout.write(text);
-    const rail = new Rail({
-      prefix: this.theme.paint('border', '│') + ' ',
-      errPrefix: this.theme.paint('err', '│') + ' ',
-      spinner: this.spinner,
-      sink: realWrite,
-    });
+    const rule = this.settings.layout === 'rule';
+    const rail = new Rail(rule
+      ? { prefix: REST, first: this.theme.paint('faint', '  ⎿  '), spacer: false, spinner: this.spinner, sink: realWrite }
+      : {
+        prefix: this.theme.paint('border', '│') + ' ',
+        errPrefix: this.theme.paint('err', '│') + ' ',
+        spinner: this.spinner,
+        sink: realWrite,
+      });
     const decode = (chunk, encoding) => (typeof chunk === 'string' ? chunk : Buffer.from(chunk).toString(typeof encoding === 'string' ? encoding : 'utf8'));
     const patch = (isErr) => function (chunk, encoding, cb) {
       rail.write(decode(chunk, encoding), isErr);
@@ -259,6 +275,7 @@ export class Shell {
       return true;
     };
     this.rail = rail;
+    this.lastRail = rail; // kept after the cell, so the footer knows whether `⎿` is taken
     this.realStdoutWrite = realWrite;
     process.stdout.write = patch(false);
     process.stderr.write = patch(true);
@@ -589,7 +606,9 @@ export class Shell {
       let w = 0;
       const flush = (end) => {
         const text = runs(line.slice(start, end), styles, offset + start).map(([s, c]) => t.paint(s ?? 'fg', c)).join('');
-        out.push(`${out.length ? ' ' : t.paint('accent.bold', this.settings.layout === 'box' ? '❯' : '>')} ${text}`);
+        const layout = this.settings.layout;
+        const marker = layout === 'rule' ? t.paint('muted', '>') : t.paint('accent.bold', layout === 'box' ? '❯' : '>');
+        out.push(`${out.length ? ' ' : marker} ${text}`);
       };
       for (let i = 0; i < line.length; i++) {
         const cw = charWidth(line[i]);
@@ -608,7 +627,7 @@ export class Shell {
 
   footer(n, elapsed, value, error, status) {
     const p = (s, t) => this.theme.paint(s, t);
-    let line = p('border', '╰─ ');
+    let line = this.settings.layout === 'rule' ? p('faint', this.lastRail?.firstUsed ? REST : '  ⎿  ') : p('border', '╰─ ');
     if (error) {
       const name = error instanceof MagicError ? 'failed' : error instanceof Interrupted || error?.name === 'Interrupted' ? 'interrupted' : error?.name ?? 'Uncaught';
       line += p('err.bold', '✗ ') + p('err', name) + p('faint', ' · ');

@@ -24,6 +24,7 @@ export const VERSION = JSON.parse(fs.readFileSync(new URL('../package.json', imp
 const ENABLE_KEYS = '\x1b[>4;1m\x1b[?2004h';
 const DISABLE_KEYS = '\x1b[>4;0m\x1b[?2004l';
 const MENU_HEIGHT = 8;
+const EXIT_WINDOW = 1500; // ms a first Ctrl+C on an empty prompt waits for the second
 
 function packageName(dir) {
   try {
@@ -44,6 +45,8 @@ export class Repl {
     this.search = null; // {query, index, original, list}
     this.histNav = null; // {prefix, index, original, list}
     this.flash = null; // {text, until}
+    this.exitArmedUntil = 0;
+    this.showShortcuts = false;
     this.frame = { rows: 0, cursorRow: 0, widths: [] };
     this.shiftEnterWorks = false;
     this.reading = null; // {resolve}
@@ -67,6 +70,10 @@ export class Repl {
 
   get box() {
     return this.shell.settings.layout === 'box';
+  }
+
+  get rule() {
+    return this.shell.settings.layout === 'rule';
   }
 
   get cols() {
@@ -192,6 +199,14 @@ export class Repl {
   }
 
   handleKey(ev) {
+    const k = keyName(ev);
+    if (k === 'ctrl+c' && !this.search) return this.ctrlC();
+    const inserting = !this.viOn || this.vi.mode === 'insert';
+    if (this.rule && ev.name !== 'paste' && k === '?' && inserting && !this.buffer.text && !this.search) {
+      this.showShortcuts = !this.showShortcuts;
+      return undefined;
+    }
+    this.showShortcuts = false;
     if (ev.name === 'paste') {
       if (this.viOn && this.vi.mode !== 'insert') this.vi.toInsert();
       return this.paste(ev.text);
@@ -306,12 +321,6 @@ export class Repl {
       case 'ctrl+/':
         this.edited();
         return b.undo();
-      case 'ctrl+c':
-        if (b.text) {
-          b.reset();
-          this.edited();
-        } else this.flashFor('press ctrl+d to exit', 2500);
-        return undefined;
       case 'ctrl+l':
         this.frame = { rows: 0, cursorRow: 0, widths: [] };
         return this.realWrite('\x1b[2J\x1b[3J\x1b[H');
@@ -336,6 +345,22 @@ export class Repl {
   moved() {
     this.menu = null;
     this.histNav = null;
+  }
+
+  /** Ctrl+C clears the input; on an empty prompt it arms exit, and a second press within a moment exits. */
+  ctrlC() {
+    const b = this.buffer;
+    if (b.text) {
+      b.reset();
+      this.menu = null;
+      this.edited();
+      return undefined;
+    }
+    if (Date.now() < this.exitArmedUntil) return this.finish(null);
+    this.exitArmedUntil = Date.now() + EXIT_WINDOW;
+    this.flashFor('Press Ctrl-C again to exit', EXIT_WINDOW);
+    setTimeout(() => this.reading && this.draw(), EXIT_WINDOW + 20).unref?.(); // take the notice down on time
+    return undefined;
   }
 
   flashFor(text, ms) {
@@ -663,11 +688,12 @@ export class Repl {
     const t = this.theme;
     const W = this.cols;
     const box = this.box;
-    const B = box ? (style, text) => t.paint(style ?? 'fg', text) : (style, text) => t.paint(style ?? 'fg', text, 'bar');
+    const rule = this.rule;
+    const B = box || rule ? (style, text) => t.paint(style ?? 'fg', text) : (style, text) => t.paint(style ?? 'fg', text, 'bar');
     const b = this.buffer;
     const text = b.text;
-    const counter = box ? '' : `  [${this.shell.count + 1}]`;
-    const textW = Math.max(8, W - 4 - 2 - counter.length);
+    const counter = box || rule ? '' : `  [${this.shell.count + 1}]`;
+    const textW = rule ? Math.max(8, W - 3) : Math.max(8, W - 4 - 2 - counter.length);
 
     // wrap logical lines into visual rows: [{row, start, end}] with absolute indexes
     const rowsV = [];
@@ -714,11 +740,13 @@ export class Repl {
     const suggestion = this.suggestion();
 
     const border = (ch) => t.paint(text ? 'faint' : 'border', ch);
-    const lines = [box ? this.boxTop(W) : B('fg', ' '.repeat(W))];
+    const ruleLine = t.paint('border', '─'.repeat(W));
+    const lines = [box ? this.boxTop(W) : rule ? ruleLine : B('fg', ' '.repeat(W))];
     visible.forEach((r, k) => {
       const first = r.row === 0 && !r.wrapped;
       let prefix;
-      if (r.wrapped) prefix = B('bar.cont', '  ');
+      if (rule) prefix = first ? t.paint('muted', '> ') : t.paint('faint', '  ');
+      else if (r.wrapped) prefix = B('bar.cont', '  ');
       else prefix = first ? B('bar.prompt', box ? '❯ ' : '> ') : B('bar.cont', '· ');
       let body = '';
       const seg = text.slice(r.start, r.end);
@@ -743,7 +771,8 @@ export class Repl {
         used += textWidth(shown);
       }
       const fill = B('fg', ' '.repeat(Math.max(0, textW - used)));
-      if (box) lines.push(border('│') + ' ' + prefix + body + fill + ' ' + border('│'));
+      if (rule) lines.push(prefix + body);
+      else if (box) lines.push(border('│') + ' ' + prefix + body + fill + ' ' + border('│'));
       else {
         const right = top + k === 0 ? B('bar.count', counter) : B('fg', ' '.repeat(counter.length));
         lines.push(B('fg', '  ') + prefix + body + fill + right + B('fg', '  '));
@@ -751,11 +780,12 @@ export class Repl {
     });
     if (rowsV.length > maxRows) {
       const more = truncate(`  ${top} above · ${rowsV.length - top - visible.length} below`, W - 4).padEnd(W - 4);
-      lines.push(box ? border('│') + ' ' + t.paint('faint', more) + ' ' + border('│') : B('fg', '  ') + B('bar.cont', more) + B('fg', '  '));
+      if (rule) lines.push(t.paint('faint', more.trimEnd()));
+      else lines.push(box ? border('│') + ' ' + t.paint('faint', more) + ' ' + border('│') : B('fg', '  ') + B('bar.cont', more) + B('fg', '  '));
     }
-    lines.push(box ? border('╰' + '─'.repeat(W - 2) + '╯') : B('fg', ' '.repeat(W)));
+    lines.push(box ? border('╰' + '─'.repeat(W - 2) + '╯') : rule ? ruleLine : B('fg', ' '.repeat(W)));
     const cursorRow = 1 + (curV - top);
-    let cursorCol = 4 + curCol;
+    let cursorCol = (rule ? 2 : 4) + curCol;
 
     const below = [];
     let searchRow = -1;
@@ -765,9 +795,15 @@ export class Repl {
       const label = s.failed ? 'failing search ↑ ' : 'search ↑ ';
       below.push('  ' + t.paint('search.prompt', label) + t.paint('fg', s.query));
     }
-    if (this.menu) below.push(...this.renderMenu(4 + textWidth(text.slice(cur.start, Math.max(cur.start, this.menu.start)))));
-    if (box) below.push('', this.statusLine());
-    else below.push('', this.keybar(), '', this.modeline());
+    if (rule) {
+      if (this.menu) below.push(...this.inlineMenu());
+      else if (this.showShortcuts) below.push(...this.shortcutsPanel());
+      else below.push(this.footer());
+    } else {
+      if (this.menu) below.push(...this.renderMenu(4 + textWidth(text.slice(cur.start, Math.max(cur.start, this.menu.start)))));
+      if (box) below.push('', this.statusLine());
+      else below.push('', this.keybar(), '', this.modeline());
+    }
     for (const l of below) lines.push(truncateAnsi(l, W - 1));
     if (searchRow >= 0) {
       return { lines, cursorRow: searchRow, cursorCol: 2 + textWidth(this.search.failed ? 'failing search ↑ ' : 'search ↑ ') + textWidth(this.search.query) };
@@ -845,6 +881,84 @@ export class Repl {
     });
   }
 
+  // ── rule layout pieces ────────────────────────────────────────────────────
+
+  /** Completions as a plain list under the prompt, as in querky: the current one in the accent colour. */
+  inlineMenu() {
+    const t = this.theme;
+    const m = this.menu;
+    const n = m.items.length;
+    const height = Math.min(MENU_HEIGHT, n, Math.max(3, this.rows - 8));
+    const top = m.index >= height ? m.index - height + 1 : 0;
+    const nameW = Math.min(32, Math.max(...m.items.slice(0, 200).map((i) => textWidth(i.display))));
+    const rows = m.items.slice(top, top + height).map((it, k) => {
+      const current = top + k === m.index;
+      const name = t.paint(current ? 'accent.bold' : 'fg', truncate(it.display, nameW).padEnd(nameW));
+      const meta = it.meta ? t.paint(current ? 'accent' : 'faint', '  ' + it.meta) : '';
+      return '  ' + name + meta;
+    });
+    if (n > height) rows.push(t.paint('faint', `  ${m.index + 1}/${n}`));
+    return rows;
+  }
+
+  /** (key, what it does) for the `?` panel. */
+  shortcutItems() {
+    const items = [
+      ['enter', 'run'],
+      [this.shiftEnterWorks ? 'shift+enter' : 'alt+enter', 'new line'],
+      ['tab', 'complete'],
+      ['→', 'accept the grey suggestion'],
+      ['↑ ↓', 'history'],
+      ['ctrl+r', 'search history'],
+      ['ctrl+o', 'edit in $EDITOR'],
+      ['obj?', 'inspect'],
+      ['!cmd', 'shell command'],
+      ['%help', 'all commands'],
+      ['ctrl+c', 'clear input / exit'],
+      ['ctrl+d', 'exit'],
+    ];
+    if (this.viOn) items.splice(2, 0, ['esc', 'NORMAL mode']);
+    return items;
+  }
+
+  shortcutsPanel() {
+    const t = this.theme;
+    const items = this.shortcutItems();
+    const col = Math.max(...items.map(([k, d]) => textWidth(k) + textWidth(d) + 1)) + 4;
+    const perRow = Math.max(1, Math.min(3, Math.floor((this.cols - 2) / col)));
+    const rows = [];
+    for (let i = 0; i < items.length; i += perRow) {
+      rows.push('  ' + items.slice(i, i + perRow).map(([k, d]) => {
+        const cell = t.paint('muted', k) + t.paint('faint', ' ' + d);
+        return cell + ' '.repeat(Math.max(0, col - textWidth(k) - textWidth(d) - 1));
+      }).join('').trimEnd());
+    }
+    return rows;
+  }
+
+  footerLeft(width) {
+    const t = this.theme;
+    if (this.flash && Date.now() < this.flash.until) return t.paint('warn', this.flash.text);
+    const sig = this.signature();
+    if (sig) return renderSignature(sig, width, t);
+    const text = this.buffer.text;
+    if (text.trim() && !isComplete(text)) return t.paint('faint', 'unfinished · enter adds a line, twice on blank lines runs');
+    if (this.viOn) return this.vi.mode === 'normal' ? '' : t.paint('muted', `-- ${this.vi.label()} --`);
+    return t.paint('faint', '? for shortcuts');
+  }
+
+  footer() {
+    const t = this.theme;
+    const width = this.cols - 1;
+    const left = '  ' + this.footerLeft(width - 4);
+    if (textWidth(left) > width) return truncateAnsi(left, width);
+    const room = width - textWidth(left) - 2;
+    if (room < 8) return left;
+    let right = t.paint('status.dim', `In [${this.shell.count + 1}]`) + t.paint('status.sep', '  ·  ') + this.statusParts();
+    if (textWidth(right) > room) right = truncateAnsi(right, room);
+    return left + ' '.repeat(Math.max(1, width - textWidth(left) - textWidth(right))) + right;
+  }
+
   keybarItems() {
     if (this.search) return [['ACCEPT', 'Enter'], ['OLDER', 'Ctrl+R'], ['NEWER', 'Ctrl+S'], ['CANCEL', 'Esc']];
     if (this.menu) return [['NEXT', 'Tab'], ['ACCEPT', 'Enter'], ['CLOSE', 'Esc']];
@@ -894,9 +1008,15 @@ export class Repl {
 
   modeline() {
     const t = this.theme;
-    const sep = t.paint('status.sep', '  ·  ');
     const mode = this.viOn && !this.box ? t.paint('label', `[${this.vi.label()}]`) + '  ' : '  ';
     if (this.flash && Date.now() < this.flash.until) return mode + t.paint('warn', this.flash.text);
+    return mode + this.statusParts();
+  }
+
+  /** node version · package · directory · last result · tags, shared by every layout's status. */
+  statusParts() {
+    const t = this.theme;
+    const sep = t.paint('status.sep', '  ·  ');
     const parts = [t.paint('status', `node ${process.version}`)];
     const dir = process.cwd();
     if (this.pkgMemo.dir !== dir) this.pkgMemo = { dir, name: packageName(dir) };
@@ -908,7 +1028,7 @@ export class Repl {
     }
     if (sh.theme.name !== 'void') parts.push(t.paint('status.dim', sh.theme.name));
     if (sh.settings.autoreload) parts.push(t.paint('status.dim', 'autoreload'));
-    return mode + parts.join(sep);
+    return parts.join(sep);
   }
 
   // ── main loop ─────────────────────────────────────────────────────────────

@@ -41,7 +41,8 @@ for (;;) {
   try {
     if (Atomics.load(state, S.RUNNING) && !Atomics.load(state, S.PAUSED) && Atomics.load(state, S.AT_LINE_START)
         && Atomics.load(state, S.GENERATION) === generation) {
-      const text = `\r\x1b[2K${look.before}${look.frameOpen}${FRAMES[frame % FRAMES.length]}${look.after}`
+      const frames = look.frames ?? FRAMES;
+      const text = `\r\x1b[2K${look.before}${look.frameOpen}${frames[frame % frames.length]}${look.after}`
         + `${look.timeOpen}${formatDuration(elapsed)}${look.hint}${look.reset}`;
       fs.writeSync(fd, text);
       Atomics.store(state, S.SHOWN, 1);

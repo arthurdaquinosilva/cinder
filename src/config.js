@@ -10,7 +10,7 @@ export const XMODES = ['minimal', 'plain', 'context', 'verbose'];
 /** Every setting with its default, and a check for values set from config.json or %config. */
 export const SETTINGS = {
   theme: { default: 'void', choices: Object.keys(PALETTES), doc: 'color theme' },
-  layout: { default: 'block', choices: ['block', 'box'], doc: 'block (full-width input bar) or box (rounded box)' },
+  layout: { default: 'rule', choices: ['rule', 'block', 'box'], doc: 'rule (input between two rules, querky-style), block (full-width input bar) or box (rounded box)' },
   typescript: { default: 'auto', choices: ['auto', 'always', 'off'], doc: 'TypeScript in cells: auto (when the code isn\'t JavaScript), always, or off' },
   editingMode: { default: 'emacs', choices: ['emacs', 'vi'], doc: 'key bindings for the input' },
   automagic: { default: true, type: 'boolean', doc: 'run magics without the % prefix (cd .., pwd, ls) when the line isn\'t JavaScript' },

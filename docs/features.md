@@ -30,7 +30,7 @@ Each cell you run becomes a block:
 
 ### vi mode
 
-Start with `--vi`, switch with `%vi` / `%editmode emacs`, or set `"editingMode": "vi"`. The mode shows as `[INSERT]` / `[NORMAL]` in the mode line (in the box title with the box layout), and the cursor is a bar in insert mode and a block in normal mode.
+Start with `--vi`, switch with `%vi` / `%editmode emacs`, or set `"editingMode": "vi"`. The mode shows as `-- INSERT --` in the footer with the rule layout (nothing in normal mode, as in vim), as `[INSERT]` / `[NORMAL]` in the mode line with the block layout, and in the box title with the box layout, and the cursor is a bar in insert mode and a block in normal mode.
 
 | | |
 | --- | --- |
@@ -46,7 +46,7 @@ In insert mode the usual editing keys (Tab completion, Ctrl+R history search, Ct
 
 ### Layouts
 
-`block` (the default) is the full-width input bar with the key bar and mode line. `box` is ember's classic look: the input in a rounded box titled `In [N]`, and one status line with the environment on the left and key hints on the right. Switch with `--layout box`, `%layout box` or `"layout": "box"`.
+`rule` (the default) is querky's look: the input between two horizontal rules and a one-line footer, with `? for shortcuts` (or the vi mode, or the signature of the call you're typing) on the left and `In [N]` and the environment on the right. Press `?` on an empty prompt for the shortcuts. Completions are a plain list under the prompt, and cell output hangs under a `⎿` marker. Ctrl+C clears the input; on an empty prompt, press it twice to exit. `block` is the full-width input bar with the key bar and mode line. `box` is ember's classic look: the input in a rounded box titled `In [N]`, and one status line with the environment on the left and key hints on the right. Switch with `--layout box`, `%layout box` or `"layout": "box"`.
 
 ### Signature hints
 

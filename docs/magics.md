@@ -27,9 +27,9 @@ How errors are shown: minimal (one line), plain (the standard stack), context (y
 
 Key bindings for the input: %editmode vi or %editmode emacs (%vi switches to vi). Without an argument, show the current one. Also: `%vi`.
 
-### `%layout [block|box]`
+### `%layout [rule|block|box]`
 
-Switch the prompt layout: block (full-width input bar) or box (rounded box, like ember's classic look).
+Switch the prompt layout: rule (input between two rules, querky-style), block (full-width input bar) or box (rounded box, like ember's classic look).
 
 ### `%depth [n]`
 

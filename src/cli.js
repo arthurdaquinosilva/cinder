@@ -26,7 +26,7 @@ options:
   -i, --interactive    stay interactive after -e/-p/file
   --profile NAME       use a named profile (separate config, startup files and history)
   --theme NAME         color theme: ${Object.keys(PALETTES).join(', ')}
-  --layout NAME        block (full-width input bar) or box (rounded box)
+  --layout NAME        rule (default, querky-style), block (full-width input bar) or box (rounded box)
   --vi                 vi key bindings
   --no-startup         skip startup files and execLines
   --no-history         don't read or write the history file

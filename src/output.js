@@ -6,6 +6,8 @@ import { MessageChannel, Worker } from 'node:worker_threads';
 import { S, SIZE } from './spinner-state.js';
 
 const SPLIT = /(\r\n|\n|\r)/;
+export const REST = '     '; // the rule layout indents output five columns, under a `  ⎿  ` on the first line
+export const STAR_FRAMES = ['·', '✢', '✳', '✶', '✻', '✽', '✻', '✶', '✳', '✢']; // the rule layout's spinner, as in querky
 
 export class Spinner {
   constructor(fd, look) {
@@ -109,9 +111,11 @@ export class Spinner {
  * where the cursor is. `write(text, stream)` is what the patched process.stdout/stderr.write call.
  */
 export class Rail {
-  constructor({ prefix, errPrefix, spacer = true, spinner = null, sink }) {
+  constructor({ prefix, errPrefix, first = null, spacer = true, spinner = null, sink }) {
     this.prefix = prefix;
     this.errPrefix = errPrefix ?? prefix;
+    this.first = first; // with it, the first visible line gets this prefix instead (the rule layout's `  ⎿  `)
+    this.firstUsed = first === null;
     this.spacer = spacer;
     this.spinner = spinner;
     this.sink = sink; // (text) => void — writes to the real terminal
@@ -144,7 +148,8 @@ export class Rail {
           out += '\r';
           atStart = true;
         } else {
-          if (atStart) out += prefix;
+          if (atStart) out += this.firstUsed ? prefix : this.first;
+          if (atStart) this.firstUsed = true;
           atStart = false;
           out += piece;
         }
