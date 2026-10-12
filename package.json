@@ -1,6 +1,6 @@
 {
   "name": "cinder-shell",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A modern, beautiful interactive JavaScript and TypeScript shell for Node — magics, history, completion and live signatures in a calm terminal UI.",
   "type": "module",
   "bin": {

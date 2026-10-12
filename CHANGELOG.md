@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
+- **Rule layout** (new default), in querky's style: the input between two horizontal rules and a one-line footer — `-- INSERT --` in vi mode or `? for shortcuts` on the left (the signature of the call you're typing replaces it), `In [N]` and the environment on the right. `?` on an empty prompt lists the shortcuts. Completions are a plain list under the prompt. Cell output hangs under a `⎿` marker, five columns in, with the status line last, and the spinner reads `✻ Running… (2s · ctrl+c to interrupt)`. `--layout block` / `--layout box` (or `%layout`) bring back the previous looks.
+- Ctrl+C clears the input; on an empty prompt it now exits on a second press within 1.5 seconds, in every layout and in vi normal mode too.
 - `install.sh`: install from GitHub with `curl -fsSL https://raw.githubusercontent.com/arthurdaquinosilva/cinder/main/install.sh | sh`, without going through npm. It installs into `~/.local/lib/cinder` and `~/.local/bin`, works with any Node on PATH, and supports `CINDER_VERSION` and `--uninstall`.
 - The `CINDER.JS` wordmark (and `cinder` in the box layout) is now purple in every theme, so it no longer matches ember's orange.
 
